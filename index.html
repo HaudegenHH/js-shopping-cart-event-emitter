@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Warenkörble</title>
+
+	<style>
+		* {
+		  margin: 0;
+		  padding: 0;
+		  box-sizing: border-box;
+		}
+
+		body, html {
+		  display: flex; 
+		  justify-content: center;
+		  padding: 10px;
+		}
+
+		#main-wrapper {
+		  width: 80vw;
+		  min-height: 100vh;
+		  display: flex;
+		  justify-content: space-between;
+		  border: 1px solid grey;
+		  padding: 5px;  
+		}
+
+		#main-wrapper h2 {
+		  text-align: center;
+		}
+
+		#links {
+		  width: 45%;
+		  height: 100%;
+		  border: 1px solid grey;
+		  
+		}
+
+		#rechts {
+		  width: 45%;
+		  height: 100%;
+		  border: 1px solid grey;
+		}
+
+		ul {
+		  margin: 5px;
+		  min-height: 50%;
+		  border: 1px solid grey;
+		  list-style-type: none;
+		}
+		ul li {
+		  border: 1px solid grey;
+		  display: flex;
+		  justify-content: space-between;
+		  margin: 5px 0;
+		}
+
+
+		.card {
+		  padding: 5px;
+		  margin: 5px;
+		  border: 1px solid grey;
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: center;
+		  align-items: center;
+		}
+
+		img {
+		  border: 1px solid black;
+		  width: 80%;
+		  height: 80%;
+		  margin: 15px 5px;
+		}
+		.card p {
+		  margin: 5px;
+		}
+		.card #amount, label {
+		  margin-left: 5px;
+		  margin-bottom: 5px;
+		}
+		.card .btn {
+		  width: 100px;
+		  height: 20px;
+		  background-color: navy;
+		  border: none;
+		  border-radius: 5px;
+		  color: white;
+		  cursor: pointer;
+		}
+		.btn:hover {
+		  background-color: lightblue;
+		}
+		#total {
+		  display: flex;
+		  justify-content: space-between;
+		  padding: 5px;
+		  border-top: 2px solid black;
+		}
+		#total p, span {
+		  margin: 5px;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="main-wrapper">
+	  <div id="links">
+	    <h2><u>Products</u></h2>
+	    <ul id="product-list">      
+	    </ul>    
+	  </div>
+	  <div id="rechts">
+	    <h2><u>Card</u></h2>
+	    <ul id="rList">
+	      
+	    </ul>
+	    <div id="total">
+	      <p>Total: </p><span></span>
+	    </div>
+	  </div>
+	</div>
+
+	<script>
+		let products = [
+		  {
+				id: 1,
+		    name: "Elefant",
+		    price: 9.98,
+		    imgSrc: "https://compressjpeg.com/images/compressjpeg/icon.png"
+		  },
+		  {
+		  id: 2,
+		    name: "Elefant2",
+		    price: 19.98,
+		    imgSrc: "https://compressjpeg.com/images/compressjpeg/icon.png"
+		  },
+		]
+
+		class Product {
+			constructor(id, name, price, imgSrc){
+		  	this.id   = id
+		  	this.name = name
+		    this.price = price
+		    this.imgSrc = imgSrc
+		  }  
+		}
+
+		class ProductList {
+			constructor(){
+		  	this.productList = []
+		  }
+		  add(product){
+		  	this.productList.push(product)
+		  }
+		  addPerId(id){
+		  	let product = products.find(product => product.id == id) 
+		    card.add(product)
+		  }
+		  show(){
+		  	let pList = document.querySelector("#product-list")
+		    this.productList.map(p => {
+		    	let li = document.createElement('li')
+		      let cardDiv = document.createElement('div')
+		      cardDiv.classList.add("card")
+		      let img = document.createElement('img')
+		      img.src = p.imgSrc
+		      let pName = document.createElement('p')
+		      pName.innerText = p.name
+		      let pTag = document.createElement('p')
+		      let spanTag = document.createElement('span')
+		      spanTag.innerText = p.price
+		      pTag.textContent = "Price: "
+		      pTag.appendChild(spanTag)
+		      let label = document.createElement('label')
+		      label.innerText = "Amount: "
+		      let sel = document.createElement('select')
+		      let opt1 = document.createElement('option')
+		      opt1.innerText = 1
+		      opt1.value = 1
+		      let opt2 = document.createElement('option')
+		      opt2.innerText = 2
+		      opt2.value = 2
+		      let opt3 = document.createElement('option')
+		      opt3.innerText = 3
+		      opt3.value = 3
+		      sel.appendChild(opt1)
+		      sel.appendChild(opt2)
+		      sel.appendChild(opt3)
+		      let btn = document.createElement('button')
+		      btn.classList.add("btn")
+		      btn.innerText = "Buy"
+		      btn.dataset.id = p.id      
+		      cardDiv.appendChild(img)
+		      cardDiv.appendChild(pName)
+		      cardDiv.appendChild(pTag)
+		      cardDiv.appendChild(label)
+		      cardDiv.appendChild(sel)
+		      cardDiv.appendChild(btn)
+		      li.appendChild(cardDiv)
+		      pList.appendChild(li)
+		    })
+		    const btns = document.querySelectorAll('.btn')
+		    btns.forEach(btn => {
+					btn.addEventListener('click', (e) => {
+		  			e.preventDefault()
+		    		let id = e.target.dataset.id
+		    		this.addPerId(id)
+		  		})
+				})
+		  }
+		}
+
+
+		class Card {
+			constructor(){
+		  	this.cardList = []    
+		    this.events = {}
+		  }
+		  add(product){
+		  	this.cardList.push(product)  
+		    this.emit("add", this)
+		  }
+		  emit(eventName, content){
+		  	if(eventName in this.events){
+		    	for(let cb of this.events[eventName]){
+		      	cb(content)
+		      }
+		    }
+		  }
+		  on(eventName, cb) {
+		  	if(eventName in this.events){
+		    	this.events[eventName].push(cb)
+		    } else {
+		      this.events[eventName] = [cb]
+		    }
+		  }
+		  show(){
+		  	rList.innerHTML = ""
+		    this.cardList.forEach(card => {
+		      let li = document.createElement('li')
+		      let span1 = document.createElement('span')
+		      let span2 = document.createElement('span')
+		      span1.innerText = card.name
+		      span2.innerText = card.price
+		      li.appendChild(span1)
+		      li.appendChild(span2)
+		      rList.appendChild(li)
+		    })
+		  }
+		}
+
+		let pList = new ProductList()
+		let card  = new Card()
+		const rList = document.querySelector('#rList')
+
+		card.on("add", (pL) => {
+			pL.show()
+		})
+		card.on("add", (pL) => {
+			let total = pL.cardList.reduce((acc, cur) => acc + cur.price, 0)
+		  document.querySelector('#total span').innerText = total.toFixed(2)
+		})
+
+		for(let product of products){
+			pList.add(new Product(product.id, product.name, product.price, product.imgSrc))
+		}
+
+		pList.show()
+
+	</script>
+</body>
+</html>
